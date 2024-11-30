@@ -18,6 +18,10 @@ const globalRoomMessageSchema = new mongoose.Schema({
   senderName:{
     type:String,
     required:true
+  },
+  roomId:{
+    type:String,
+    required:true
   }
 },{timestamps:true});
 

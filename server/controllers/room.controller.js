@@ -2,6 +2,7 @@ import CustomRoom from "../model/customRoom.model.js";
 import CustomRoomMsg from "../model/customRoomMsg.model.js";
 import User from "../model/user.model.js";
 import Google from "../model/google.model.js";
+import { io } from "../socket/socket.js";
 
 export const createRoom = async (req, res) => {
   try {
@@ -11,7 +12,10 @@ export const createRoom = async (req, res) => {
     if (!roomName) {
       return res.status(400).json({ message: "Please enter room name" });
     }
-
+    const existingRoom = await CustomRoom.findOne({ roomName });
+    if (existingRoom && existingRoom.admin === admin) {
+      return res.status(400).json({ message: "Room already exists" });
+    }
     const customRoom = await CustomRoom.create({
       participants: [participants],
       admin: admin,
@@ -40,16 +44,18 @@ export const sendMsg = async (req, res) => {
     if (!existingRoom) {
       return res.status(400).json({ message: "Room not found" });
     }
-    const userData = await User.findOne({_id:loggedInUser}) || await Google.findOne({_id:loggedInUser})
+    const userData =
+      (await User.findOne({ _id: loggedInUser })) ||
+      (await Google.findOne({ _id: loggedInUser }));
 
     const newMessage = new CustomRoomMsg({
       senderId: senderId,
       roomId: roomId,
       message: message,
-      profilePic:userData.image,
-      senderName:userData.username
+      profilePic: userData.image,
+      senderName: userData.username,
     });
-    console.log(newMessage)
+    console.log(newMessage);
     const savedMessage = await newMessage.save();
     existingRoom.messages.push(savedMessage._id);
     await existingRoom.save();
@@ -57,6 +63,9 @@ export const sendMsg = async (req, res) => {
       message: true,
       data: savedMessage,
     });
+    console.log(savedMessage);
+
+    io.to(roomId).emit("roomMsg", savedMessage);
   } catch (error) {
     console.log("Error in the sendMsg controller", error);
   }
@@ -64,10 +73,9 @@ export const sendMsg = async (req, res) => {
 export const getMsg = async (req, res) => {
   const roomId = req.params.id;
   try {
-    const messages = await CustomRoom.findOne({ _id: roomId }).populate(
-      "messages"
-    ).populate();
-    
+    const messages = await CustomRoom.findOne({ _id: roomId })
+      .populate("messages")
+      .populate();
 
     if (!messages) {
       return res.status(200).json({ message: false });
@@ -142,7 +150,6 @@ export const KickUser = async (req, res) => {
   try {
     const roomId = req.body.roomId;
     const userId = req.body.userId;
-    console.log(userId);
     const existingRoom = await CustomRoom.findOne({ _id: roomId });
     console.log("existingRoom", existingRoom);
     if (!existingRoom) {
@@ -163,5 +170,58 @@ export const KickUser = async (req, res) => {
   } catch (error) {
     console.log("Error in the kickUser controller", error);
     res.status(500).json({ message: "Internal server Error" });
+  }
+};
+export const DeleteRoom = async (req, res) => {
+  try {
+    const roomId = req.params.id;
+    const admin = req.user.userId;
+    const room = await CustomRoom.findById(roomId);
+    if (!room) {
+      return res.status(200).json({ message: "Room not found" });
+    }
+    if (room.admin != admin) {
+      return res
+        .status(200)
+        .json({ message: "You are not admin of this group" });
+    }
+    if (room.messages.length > 0) {
+      await CustomRoomMsg.deleteMany({ _id: { $in: room.messages } });
+    }
+    await room.deleteOne();
+    res.status(200).json({ message: "Room deleted successfully" });
+  } catch (error) {
+    console.log("Error in the deleteRoom controller", error);
+    return res.status(500).json("Internal server error");
+  }
+};
+
+export const EditRoomName = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const roomId = req.body.roomId;
+    const roomName = req.body.roomName;
+
+    const isRoom = await CustomRoom.findOne({ _id: roomId });
+    if (!isRoom) {
+      return res.status(200).json({ message: "Room not found" });
+    }
+
+    if (isRoom.admin != userId) {
+      return res
+        .status(200)
+        .json({ message: "You are not admin of this group" });
+    }
+    const updatedRoom = await CustomRoom.updateOne(
+      { _id: roomId },
+      { $set: { roomName } }
+    );
+    if (!updatedRoom) {
+      return res.status(200).json({ message: "Room name not updated" });
+    }
+    res.status(200).json({ message: "Room name updated successfully" });
+  } catch (error) {
+    console.log("Error in the EditRoomName controller", error.message);
+    res.status(500).json("Internal server error");
   }
 };

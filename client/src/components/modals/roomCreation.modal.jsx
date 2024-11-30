@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MdCancel } from "react-icons/md";
 import useCreateCustomRoom from "../../hooks/useCreateCustomRoom";
-const RoomCreationModal = ({ setIsOpen }) => {
-  const  createCustomRoom  = useCreateCustomRoom();
+import { DependencyContext } from "../../context/dependencyContext";
+const RoomCreationModal = ({ setIsOpen, inputRef }) => {
+  const { setRefCustomRoom } = useContext(DependencyContext);
+  const createCustomRoom = useCreateCustomRoom();
   const [roomName, setRoomName] = useState("");
-  const handleClick = async(e)=>{
+
+  const handleClick = async (e) => {
     e.preventDefault();
-    setRoomName(e.target.value)
-   await createCustomRoom({roomName});
-   setIsOpen(false)
-  }
+    setRoomName(e.target.value);
+    await createCustomRoom({ roomName });
+    setIsOpen(false);
+    setRefCustomRoom((prev) => !prev);
+  };
+
   return (
     <>
       <div className="bg-gray-700 absolute w-[250px] h-[120px] left-[60px] rounded-md flex flex-col p-3  gap-3 z-10">
@@ -19,6 +24,7 @@ const RoomCreationModal = ({ setIsOpen }) => {
             placeholder="Name Your Room"
             className="w-full p-2 rounded-md"
             value={roomName}
+            ref={inputRef}
             onChange={(e) => setRoomName(e.target.value)}
           />
         </div>
@@ -26,7 +32,7 @@ const RoomCreationModal = ({ setIsOpen }) => {
           <div>
             <button
               className="rounded bg-gray-200 p-2 w-[80px] hover:bg-gray-500"
-             onClick={handleClick}
+              onClick={handleClick}
             >
               OK
             </button>

@@ -18,13 +18,11 @@ const useSendMessage = () => {
     });
     const data = await response.json();
     const lastMessage = data?.newMessage;
-    console.log(lastMessage);
-    console.log(message.messages);
-    
+
     if (Array.isArray(message?.messages)) {
       setMessage((prevState) => ({
         ...prevState,
-        messages: [...prevState.messages, lastMessage],
+        messages: [...prevState?.messages, lastMessage],
       }));
     }
   };

@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { RoomContext } from "../context/roomContext";
+import { DependencyContext } from "../context/dependencyContext";
 
 const ServerPort = `${import.meta.env.VITE_SERVER_PORT}/api/room/getroomdata`;
 const useGetRoomData = ()=>{
+    const {refProfileList} = useContext(DependencyContext)
     const {roomSelected}  = useContext(RoomContext)
     const[roomData,setRoomData] = useState("");
    useEffect(()=>{
@@ -17,7 +19,7 @@ const useGetRoomData = ()=>{
        }
     }
     getRoomData()
-   },[roomSelected])
+   },[roomSelected,refProfileList])
     return  {roomData};
 
 }

@@ -12,11 +12,11 @@ function GlobalRoom() {
 
   return (
     <div
-      className="text-white flex items-center justify-between w-[100%] pb-3 mb-1 bg-[#202022] rounded-md  "
+      className="text-white flex items-center justify-between w-[100%] pt-2 pb-2 mb-1 bg-[#202022] rounded-md  "
       onClick={handleClick}
     >
-      <div className="flex-[0.3] pt-2">
-        <img src="Global.jpg" alt="" className="w-[58px] p-2 rounded-[50%]" />
+      <div className="flex-[0.3]  pl-5">
+        <img src="globalChat.jpg" alt="" className="w-[80%] p-3 rounded-[50%]" />
       </div>
       <div className="flex-[1] w-[100%]">
         <h1>Global-Chat</h1>

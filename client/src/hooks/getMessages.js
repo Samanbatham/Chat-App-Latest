@@ -9,7 +9,7 @@ const useGetMessage = () => {
   const { message, setMessage } = useContext(messageContext);
 
   useEffect(() => {
-    const getMessage = async () => {
+    const getMessage = async() => {
       try {
         const response = await fetch(`${ServerPort}/${conversations._id}`, {
           credentials: "include",
@@ -18,10 +18,8 @@ const useGetMessage = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-
         const data = await response.json();
-
-        setMessage(data || []);
+         setMessage(data || []);
       } catch (error) {
         console.error("Failed to fetch messages:", error);
       }

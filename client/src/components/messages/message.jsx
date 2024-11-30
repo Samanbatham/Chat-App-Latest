@@ -13,7 +13,7 @@ function Message({ message }) {
 
   
   return (
-    <div className="flex flex-col z-0 ">
+    <div className="flex flex-col z-0">
       
         {message.senderId != id ? (
           <div className="flex p-3">

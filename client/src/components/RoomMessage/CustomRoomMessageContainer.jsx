@@ -8,7 +8,6 @@ import AddUser from "../modals/addUSer.modal";
 import { GiExitDoor } from "react-icons/gi";
 import LeaveRoom from "../modals/leaveRoom.modal";
 
-
 function CustomRoomMessageContainer() {
   const { roomSelected } = useContext(RoomContext);
   const [isClicked, setIsClicked] = useState(false);
@@ -20,14 +19,19 @@ function CustomRoomMessageContainer() {
       {roomSelected ? (
         <div className="relative flex">
           <div className="flex items-center  bg-[#232327] w-full gap-1">
-            <img
-              src="DummyProfile.png"
+            {roomSelected.image ? <img
+              src={roomSelected.image}
               alt=""
               className="w-[6.1%] p-3 rounded-[50%]"
-            />
+            />:<img
+            src="DummyProfile.png"
+            alt=""
+            className="w-[6.1%] p-3 rounded-[50%]"
+          />}
             <div>
               <h1 className="text-white">{roomSelected.roomName}</h1>
             </div>
+            
           </div>
           {roomSelected.admin === id ? (
             <div>

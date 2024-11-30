@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { DependencyContext } from "../context/dependencyContext";
 
 const ServerPort = `${import.meta.env.VITE_SERVER_PORT}/api/room/getrooms`;
 
 const useGetRoom = ()=>{
+    const {refCustomRoom} = useContext(DependencyContext);
     const [rooms,setRooms] = useState([]);
     const [loading,setLoading]=useState(false);
     useEffect(()=>{
@@ -25,7 +27,7 @@ const useGetRoom = ()=>{
         
     }
     getRoom();
-    },[])
+    },[refCustomRoom])
     
     return {rooms,loading};
 }

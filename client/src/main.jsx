@@ -1,4 +1,3 @@
-
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
@@ -9,26 +8,27 @@ import { ConversationContextProvider } from "./context/conversationContext.jsx";
 import { MessageContextProvider } from "./context/messageContext.jsx";
 import { GlobalRoomContextProvider } from "./context/globalRoomContext.jsx";
 import { RoomContextProvider } from "./context/roomContext.jsx";
-
-
+import { DependencyContextProvider } from "./context/dependencyContext.jsx";
+import { SocketContextProvider } from "./context/SocketContext.jsx";
 createRoot(document.getElementById("root")).render(
   <div>
-    
-   <RoomContextProvider>
-    <GlobalRoomContextProvider>
-      <MessageContextProvider>
-        <ConversationContextProvider>
-          <AuthContextProvider>
-            <ChatContextProvider>
-              <App />
-            </ChatContextProvider>
-          </AuthContextProvider>
-        </ConversationContextProvider>
-      </MessageContextProvider>
-    </GlobalRoomContextProvider>
-    </RoomContextProvider>
-    
+    <AuthContextProvider>
+      <SocketContextProvider>
+        <DependencyContextProvider>
+          <RoomContextProvider>
+            <GlobalRoomContextProvider>
+              <MessageContextProvider>
+                <ConversationContextProvider>
+                  <ChatContextProvider>
+                    <App />
+                  </ChatContextProvider>
+                </ConversationContextProvider>
+              </MessageContextProvider>
+            </GlobalRoomContextProvider>
+          </RoomContextProvider>
+        </DependencyContextProvider>
+      </SocketContextProvider>
+    </AuthContextProvider>
     <Toaster />
-   
   </div>
 );

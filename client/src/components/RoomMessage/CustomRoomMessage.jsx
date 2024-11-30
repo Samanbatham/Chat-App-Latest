@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { conversationContext } from "../../context/conversationContext";
 import { AuthContext } from "../../context/authContent";
 
 function CustomRoomMessage({ message }) {
@@ -40,15 +39,15 @@ function CustomRoomMessage({ message }) {
               <h1 className="text-white text-[11px] opacity-50">
                 {formattedDate}
               </h1>
-              <h2 className="text-white text-[15px] opacity-50">
+              {/* <h2 className="text-white text-[15px] opacity-50">
                 {message.senderName}
-              </h2>
+              </h2> */}
             </div>
             <div className="flex justify-end text-white">{message.message}</div>
           </div>
-          <div>
+          {/* <div>
             <img src={profilePic} alt="" className="w-[50px] rounded-[50%]" />
-          </div>
+          </div> */}
         </div>
       )}
     </div>

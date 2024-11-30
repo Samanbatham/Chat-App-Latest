@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 const ServerPort = `${import.meta.env.VITE_SERVER_PORT}/api/room/create`;
 
 const useCreateCustomRoom = () => {
@@ -9,7 +10,10 @@ const useCreateCustomRoom = () => {
       credentials: "include",
     });
     const data = await response.json();
-    console.log(data);
+    if(data.error){
+      throw new Error(data.error)
+    }
+    toast.success(data.message)
   };
   return createCustomRoom;
 };

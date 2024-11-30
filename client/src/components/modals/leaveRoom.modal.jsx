@@ -1,24 +1,28 @@
-import React, { useContext } from 'react'
-import { RoomContext } from '../../context/roomContext'
-import { AuthContext } from '../../context/authContent';
-import useKickUser from '../../hooks/useKickUser';
-import toast from 'react-hot-toast';
+import React, { useContext } from "react";
+import { RoomContext } from "../../context/roomContext";
+import { AuthContext } from "../../context/authContent";
+import useKickUser from "../../hooks/useKickUser";
+import toast from "react-hot-toast";
+import { DependencyContext } from "../../context/dependencyContext";
 
-const LeaveRoom = ({setClicked})=> {
-    const{roomSelected} = useContext(RoomContext);
-    const {id} = useContext(AuthContext);
-    const {kickUser} = useKickUser();
-    console.log(roomSelected)
-    const handleClick = async(e)=>{
-        e.preventDefault();
-        const data = {
-            "roomId": roomSelected._id,
-            "userId": id
-        }
-        await kickUser(data)
-        toast.success("Leaved room Successfully")
-        setClicked(false)
-    }
+const LeaveRoom = ({ setClicked }) => {
+  const { setRefCustomRoom } = useContext(DependencyContext);
+  const { roomSelected, setRoomSelected } = useContext(RoomContext);
+  const { id } = useContext(AuthContext);
+  const { kickUser } = useKickUser();
+  console.log(roomSelected);
+  const handleClick = async (e) => {
+    e.preventDefault();
+    const data = {
+      roomId: roomSelected._id,
+      userId: id,
+    };
+    await kickUser(data);
+    toast.success("Leaved room Successfully");
+    setClicked(false);
+    setRefCustomRoom((prev) => !prev);
+    setRoomSelected("");
+  };
   return (
     <div className="bg-gray-400 text-black p-5 pb-4 flex flex-col rounded-lg ">
       <div className="pb-3">
@@ -39,7 +43,7 @@ const LeaveRoom = ({setClicked})=> {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default LeaveRoom;

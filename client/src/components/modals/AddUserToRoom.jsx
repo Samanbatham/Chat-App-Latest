@@ -8,15 +8,14 @@ const AddUserToRoom = ({ setClicked }) => {
   const { conversations } = useContext(conversationContext);
   const { rooms } = useGetRoom();
   const roomData = rooms.data;
-  const {addUser} = useAddUser();
+  const { addUser } = useAddUser();
 
   const handleClick = async (conv) => {
-    
     const data = {
-      roomId:conv,
-      userId:conversations._id
-    }
-    await addUser(data)
+      roomId: conv,
+      userId: conversations._id,
+    };
+    await addUser(data);
   };
 
   return (
@@ -38,12 +37,12 @@ const AddUserToRoom = ({ setClicked }) => {
           >
             <div
               className="text-white flex items-center justify-between w-[100%]  bg-[#202022] rounded-md hover:bg-[#3a3a3d] cursor-pointer  "
-              onClick={()=>handleClick(conv._id)}
+              onClick={() => handleClick(conv._id)}
             >
               {conv.image ? (
                 <div className="flex-[0.3] ">
                   <img
-                    src={roomData.image}
+                    src={conv.image}
                     alt=""
                     className="w-[100%] p-2  rounded-[50%]"
                   />

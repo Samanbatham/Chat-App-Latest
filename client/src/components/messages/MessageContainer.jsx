@@ -5,11 +5,14 @@ import { ImUserPlus } from "react-icons/im";
 import { conversationContext } from "../../context/conversationContext";
 import { AuthContext } from "../../context/authContent";
 import AddUserToRoom from "../modals/AddUserToRoom";
-
+import { useSocketContext } from "../../context/SocketContext";
 function MessageContainer() {
   const { conversations } = useContext(conversationContext);
   const { username } = useContext(AuthContext);
   const [clicked, setClicked] = useState(false);
+  const { onlineUsers } = useSocketContext();
+  const isOnline = onlineUsers.includes(conversations._id);
+  
   return (
     <div className="flex-1  flex flex-col bg-[#2a2a2e]  ">
       {conversations._id !== undefined ? (
@@ -35,9 +38,8 @@ function MessageContainer() {
             )}
             <div>
               <h1 className="text-white">{conversations.username}</h1>
-              <h2 className="text-white">Active Now</h2>
+              {isOnline ? <h2 className="text-green-500">Online</h2> : <h2 className="text-red-500">Offline</h2>}
             </div>
-            <h3 className="text-white">Online</h3>
           </div>
           <div className="">
             <ImUserPlus

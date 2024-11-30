@@ -10,6 +10,7 @@ import UserProfiles from "../../components/profileList/UserProfiles";
 import UserDetail from "../../components/profile/UserDetail";
 
 
+
 function Home() {
   const { chatSelected } = useContext(ChatContext);
   

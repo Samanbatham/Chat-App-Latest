@@ -8,7 +8,7 @@ const useSendGlobalMessage = () => {
  const {globalMsg,setGlobalMsg} = useContext(GlobalRoomContext)
 
   const sendGlobalMessage = async (newMessage) => {
-    const response = await fetch('http://localhost:8080/api/globalroom/post/66edb6850306028acc925215', {
+    const response = await fetch('http://localhost:8080/api/globalroom/post/66ffb18a79bba67c6bb38fce', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newMessage),
@@ -17,11 +17,10 @@ const useSendGlobalMessage = () => {
     const data = await response.json();
     const lastMessage = data?.message;
     
-    
-    if (Array.isArray(globalMsg)) {
-      setGlobalMsg((prevState) =>[...prevState, lastMessage])
-      ;
-    }
+    // if (Array.isArray(globalMsg)) {
+    //   setGlobalMsg((prevState) =>[...prevState, lastMessage])
+    //   ;
+    // }
   };
   return sendGlobalMessage;
 };

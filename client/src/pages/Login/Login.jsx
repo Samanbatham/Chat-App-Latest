@@ -18,7 +18,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await Login(data);
-    console.log(response)
+   
     if (response.success) {
       navigate("/home");
       localStorage.setItem(
@@ -27,7 +27,7 @@ const Login = () => {
           email: response.user.email,
           username: response.user.username,
           profilePic: response.user.image,
-          _id:response.user._id
+          id:response.user._id
         })
       );
     }
@@ -39,7 +39,7 @@ const Login = () => {
     try {
       if (authResult["code"]) {
         const result = await googleDbLogin(authResult["code"]);
-        console.log(result);
+       
         if (result.success) {
           navigate("/home");
           localStorage.setItem(

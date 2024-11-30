@@ -11,7 +11,7 @@ const useGetGlobalMessages = () => {
     const getGlobalMessages = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8080/api/globalroom/get/66edb6850306028acc925215",
+          "http://localhost:8080/api/globalroom/get/66ffb18a79bba67c6bb38fce",
           {
             credentials: "include",
           }

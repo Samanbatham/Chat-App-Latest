@@ -3,7 +3,9 @@ import { useContext } from "react";
 import { RoomContext } from "../../context/roomContext";
 import useKickUser from "../../hooks/useKickUser";
 import toast from "react-hot-toast";
+import { DependencyContext } from "../../context/dependencyContext";
 const KickUser = ({ setIsClicked, room }) => {
+  const { setRefProfileList } = useContext(DependencyContext);
   const { roomSelected } = useContext(RoomContext);
   const { kickUser } = useKickUser();
 
@@ -14,7 +16,8 @@ const KickUser = ({ setIsClicked, room }) => {
       roomId: roomSelected._id,
     };
     await kickUser(data);
-    toast.success("User kicked Successfully")
+    toast.success("User kicked Successfully");
+    setRefProfileList((prev) => !prev);
   };
   return (
     <div className="bg-gray-400 text-black p-5 pb-4 flex flex-col rounded-lg ">

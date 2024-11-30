@@ -3,6 +3,7 @@ import User from  "../model/user.model.js";
 import Google from '../model/google.model.js'
 import GlobalRoom from "../model/globalRoom.model.js";
 import GlobalRoomMessage from "../model/globalRoomMsg.model.js";
+import { io } from "../socket/socket.js";
 export  const getRoomMsg = async(req,res)=>{
     try {
         const  globalRoomId = req.params.id;
@@ -12,8 +13,14 @@ export  const getRoomMsg = async(req,res)=>{
     if(!messages){
         return res.status(404).json({message: 'Room not found'});
     }
+    if(messages.length<0){
+        res.status(200).json({success:true,
+            messages:[]
+        })
+    }
     res.status(200).json({success:true,
-        messages
+        messages,
+        roomId:process.env.GLOBALROOMID
     })
 
     } catch (error) {
@@ -40,7 +47,8 @@ export const sendRoomMsg = async(req,res)=>{
             message: message,
             senderId: loggedInUser,
             profilePic:userData.image,
-            senderName:userData.username
+            senderName:userData.username,
+            roomId:process.env.GLOBALROOMID
         })
         
         if(!newMessage){
@@ -49,9 +57,11 @@ export const sendRoomMsg = async(req,res)=>{
         room.messages.push(newMessage);
         await room.save();
         await newMessage.save();
+        io.to(process.env.GLOBALROOMID).emit("GlobalRoomMsg", newMessage);
         res.status(201).json({success:true,
             message:newMessage
         })
+        
     }catch(error){
         console.log("Error in the sendRoomMsg controller",error)
         res.status(500).json("Internal Server Error",error)
@@ -61,11 +71,7 @@ export const sendRoomMsg = async(req,res)=>{
 // export const createRoom = async(req,res)=>{
 
 //     const participants = await User.find({});
-//     const googleUser = await Google.find({})
-
-//     const allUser = participants.concat(googleUser)
-//     console.log(allUser);
-//     const room = await GlobalRoom.create({participants:allUser,
+//     const room = await GlobalRoom.create({participants:participants,
 //         roomName:"GlobalChat",
 //         messages:[]
 //     })
